@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Interview Demo</p>
+    <h1>Inbound contracts that route themselves when they are safe and flag themselves when they are not.</h1>
+    <p class="lede">
+      The local demo form below uses the same pipeline as the Resend webhook. Upload a contract-like file,
+      extract structured terms, retrieve policy snippets from the knowledge base, and route the result.
+    </p>
+  </div>
+  <div class="status-panel">
+    <div class="status-item">
+      <span>OpenAI</span>
+      <strong class="{{ 'ok' if openai_configured else 'warn' }}">{{ 'Configured' if openai_configured else 'Missing key' }}</strong>
+    </div>
+    <div class="status-item">
+      <span>Resend</span>
+      <strong class="{{ 'ok' if resend_configured else 'warn' }}">{{ 'Configured' if resend_configured else 'Pending setup' }}</strong>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Local Demo Upload</h2>
+  <form action="/demo/process" method="post" enctype="multipart/form-data" class="upload-form">
+    <label>
+      Sender
+      <input type="email" name="sender" value="legal.ops@demo.test" />
+    </label>
+    <label>
+      Recipient
+      <input type="email" name="recipient" value="contracts@demo.test" />
+    </label>
+    <label>
+      Subject
+      <input type="text" name="subject" value="New vendor agreement for review" />
+    </label>
+    <label class="file-field">
+      Attachment
+      <input type="file" name="file" required />
+    </label>
+    <button type="submit">Process Attachment</button>
+  </form>
+</section>
+
+<section class="card cases-card">
+  <div class="section-header">
+    <h2>Recent Cases</h2>
+    <span>{{ cases | length }} shown</span>
+  </div>
+  <div class="table-wrapper">
+    <table class="cases-table">
+      <thead>
+        <tr>
+          <th class="col-created">Created</th>
+          <th class="col-status">Status</th>
+          <th class="col-attachment">Attachment</th>
+          <th class="col-sender">Sender</th>
+          <th class="col-subject">Subject</th>
+          <th class="col-confidence">Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for case in cases %}
+        <tr>
+          <td><a href="/cases/{{ case.id }}">{{ case.created_at.strftime("%Y-%m-%d %H:%M") }}</a></td>
+          <td><span class="pill {{ case.status }}">{{ case.status }}</span></td>
+          <td><span class="cell-text" title="{{ case.attachment_name }}">{{ case.attachment_name }}</span></td>
+          <td><span class="cell-text" title="{{ case.sender or '-' }}">{{ case.sender or "-" }}</span></td>
+          <td><span class="cell-text" title="{{ case.subject or '-' }}">{{ case.subject or "-" }}</span></td>
+          <td>{{ "%.2f"|format(case.confidence or 0) }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="empty-state">No processed cases yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

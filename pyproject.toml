@@ -1,0 +1,27 @@
+[project]
+name = "contract-review-agent"
+version = "0.1.0"
+description = "Interview task: email-driven contract review agent with extraction, RAG, and routing."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "jinja2>=3.1.4",
+  "openai>=1.109.0",
+  "pydantic-settings>=2.6.1",
+  "pypdf>=5.1.0",
+  "python-multipart>=0.0.12",
+  "qdrant-client>=1.12.1",
+  "sqlalchemy>=2.0.36",
+  "svix>=1.45.0",
+  "uvicorn>=0.32.1",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app", "app.services"]
+

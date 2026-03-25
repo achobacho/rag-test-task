@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="card">
+  <div class="section-header">
+    <div>
+      <p class="eyebrow">Case {{ case.id }}</p>
+      <h1>{{ case.attachment_name }}</h1>
+    </div>
+    <span class="pill {{ case.status }}">{{ case.status }}</span>
+  </div>
+
+  <div class="detail-grid">
+    <div>
+      <h3>Envelope</h3>
+      <dl>
+        <dt>Source</dt><dd>{{ case.source }}</dd>
+        <dt>Sender</dt><dd>{{ case.sender or "-" }}</dd>
+        <dt>Recipient</dt><dd>{{ case.recipient or "-" }}</dd>
+        <dt>Subject</dt><dd>{{ case.subject or "-" }}</dd>
+        <dt>Confidence</dt><dd>{{ "%.2f"|format(case.confidence or 0) }}</dd>
+        <dt>Stored path</dt><dd>{{ case.stored_path or "-" }}</dd>
+      </dl>
+    </div>
+    <div>
+      <h3>Operational Status</h3>
+      {% if case.error_message %}
+      <p class="error-box">{{ case.error_message }}</p>
+      {% else %}
+      <p>The case completed and the structured outputs are shown below.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Extraction JSON</h2>
+  <pre>{{ case.pretty_json(case.extracted_json) }}</pre>
+</section>
+
+<section class="card">
+  <h2>RAG Matches</h2>
+  <pre>{{ case.pretty_json(case.rag_json) }}</pre>
+</section>
+
+<section class="card">
+  <h2>Policy Review</h2>
+  <pre>{{ case.pretty_json(case.review_json) }}</pre>
+</section>
+
+<section class="card">
+  <h2>Routing Decision</h2>
+  <pre>{{ case.pretty_json(case.routing_json) }}</pre>
+</section>
+{% endblock %}
+
